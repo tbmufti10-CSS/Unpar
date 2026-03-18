@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Pendaftaran - Universitas Parung 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e3a8f 0%, #1e40af 100%);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(30, 58, 143, 0.15);
+        }
+        
+        .step-active {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .step-completed {
+            background: #10b981;
+            color: white;
+        }
+        
+        .step-pending {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+        
+        .radio-card:checked + div {
+            border-color: #f59e0b;
+            background: #fffbeb;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+        }
+        
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+        
+        .upload-area.dragover {
+            border-color: #f59e0b;
+            background: #fef3c7;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .animate-slide-in {
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+    </style>
+<base target="_blank">
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <!-- Header -->
+    <header class="gradient-bg text-white sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                        <img src="img/1.png" alt="Logo Liverpool" width="100">
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight">Universitas Parung</h1>
+                        <p class="text-xs text-blue-200">PMB 2026/2027</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center gap-4 text-sm">
+                    <span class="flex items-center gap-2">
+                        <i class="fas fa-phone text-amber-400"></i> 0831-4194-7685
+                    </span>
+                    <span class="flex items-center gap-2">
+                        <i class="fas fa-envelope text-amber-400"></i> pmb@universitasparung.ac.id
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Steps -->
+    <div class="bg-white shadow-sm border-b">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between max-w-4xl mx-auto">
+                <div class="flex items-center gap-2 flex-1">
+                    <div id="step-1-indicator" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm step-active transition-all">1</div>
+                    <span class="hidden sm:block text-sm font-medium">Data Pribadi</span>
+                </div>
+                <div class="h-1 flex-1 bg-gray-200 mx-2 rounded-full overflow-hidden">
+                    <div id="progress-1" class="h-full bg-amber-500 progress-bar" style="width: 0%"></div>
+                </div>
+                
+                <div class="flex items-center gap-2 flex-1">
+                    <div id="step-2-indicator" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm step-pending transition-all">2</div>
+                    <span class="hidden sm:block text-sm font-medium text-gray-500">Data Sekolah</span>
+                </div>
+                <div class="h-1 flex-1 bg-gray-200 mx-2 rounded-full overflow-hidden">
+                    <div id="progress-2" class="h-full bg-amber-500 progress-bar" style="width: 0%"></div>
+                </div>
+                
+                <div class="flex items-center gap-2 flex-1">
+                    <div id="step-3-indicator" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm step-pending transition-all">3</div>
+                    <span class="hidden sm:block text-sm font-medium text-gray-500">Pilihan Prodi</span>
+                </div>
+                <div class="h-1 flex-1 bg-gray-200 mx-2 rounded-full overflow-hidden">
+                    <div id="progress-3" class="h-full bg-amber-500 progress-bar" style="width: 0%"></div>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <div id="step-4-indicator" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm step-pending transition-all">4</div>
+                    <span class="hidden sm:block text-sm font-medium text-gray-500">Upload</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Form Container -->
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
+        <form id="registrationForm" class="space-y-6">
+            
+            <!-- Step 1: Data Pribadi -->
+            <div id="step-1" class="glass-card rounded-2xl p-6 md:p-8 shadow-lg animate-slide-in">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-amber-500">
+                    <div class="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center text-white">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-blue-900">Data Pribadi</h2>
+                        <p class="text-sm text-gray-500">Isi data diri Anda dengan lengkap dan benar</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Nama Lengkap -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Nama Lengkap <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="nama_lengkap" required
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none"
+                            placeholder="Nama sesuai ijazah">
+                    </div>
+
+                    <!-- NIK -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            NIK <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="nik" required maxlength="16" pattern="[0-9]{16}"
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none"
+                            placeholder="16 digit nomor KTP">
+                    </div>
+
+                    <!-- NISN -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            NISN <span class="text-gray-400 text-xs font-normal">(jika ada)</span>
+                        </label>
+                        <input type="text" name="nisn" maxlength="10"
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none"
+                            placeholder="10 digit nomor NISN">
+                    </div>
+
+                    <!-- Tempat Lahir -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Tempat Lahir <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="tempat_lahir" required
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none"
+                            placeholder="Kota/Kabupaten">
+                    </div>
+
+                    <!-- Tanggal Lahir -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Tanggal Lahir <span class="text-red-500">*</span>
+                        </label>
+                        <input type="date" name="tanggal_lahir" required
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none">
+                    </div>
+
+                    <!-- Jenis Kelamin -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Jenis Kelamin <span class="text-red-500">*</span>
+                        </label>
+                        <select name="jenis_kelamin" required
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none bg-white">
+                            <option value="">Pilih Jenis Kelamin</option>
+                            <option value="L">Laki-laki</option>
+                            <option value="P">Perempuan</option>
+                        </select>
+                    </div>
+
+                    <!-- Agama -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Agama <span class="text-red-500">*</span>
+                        </label>
+                        <select name="agama" required
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none bg-white">
+                            <option value="">Pilih Agama</option>
+                            <option value="Islam">Islam</option>
+                            <option value="Kristen">Kristen</option>
+                            <option value="Katolik">Katolik</option>
+                            <option value="Hindu">Hindu</option>
+                            <option value="Buddha">Buddha</option>
+                            <option value="Konghucu">Konghucu</option>
+                        </select>
+                    </div>
+
+                    <!-- No HP -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            No. HP/WhatsApp <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">+62</span>
+                            <input type="tel" name="no_hp" required pattern="[0-9]{10,13}"
+                                class="input-field w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none"
+                                placeholder="83141947685">
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Email Aktif <span class="text-red-500">*</span>
+                        </label>
+                        <input type="email" name="email" required
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none"
+                            placeholder="emailanda@gmail.com">
+                    </div>
+
+                    <!-- Alamat Lengkap -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Alamat Lengkap <span class="text-red-500">*</span>
+                        </label>
+                        <textarea name="alamat" required rows="3"
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none resize-none"
+                            placeholder="Jl. Nama Jalan No. XX, RT/RW, Kelurahan, Kecamatan, Kota/Kab"></textarea>
+                    </div>
+
+                    <!-- Kode Pos -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Kode Pos <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="kode_pos" required maxlength="5" pattern="[0-9]{5}"
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none"
+                            placeholder="16330">
+                    </div>
+
+                    <!-- Kewarganegaraan -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Kewarganegaraan
+                        </label>
+                        <select name="kewarganegaraan"
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none bg-white">
+                            <option value="WNI" selected>Warga Negara Indonesia (WNI)</option>
+                            <option value="WNA">Warga Negara Asing (WNA)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Data Orang Tua -->
+                <div class="mt-8 pt-6 border-t">
+                    <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
+                        <i class="fas fa-users text-amber-500"></i> Data Orang Tua/Wali
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Nama Ayah <span class="text-red-500">*</span></label>
+                            <input type="text" name="nama_ayah" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Pekerjaan Ayah</label>
+                            <select name="pekerjaan_ayah"
+                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none bg-white">
+                                <option value="">Pilih Pekerjaan</option>
+                                <option value="PNS">PNS/TNI/POLRI</option>
+                                <option value="Swasta">Karyawan Swasta</option>
+                                <option value="Wiraswasta">Wiraswasta</option>
+                                <option value="Petani">Petani/Nelayan</option>
+                                <option value="Buruh">Buruh</option>
+                                <option value="Pensiunan">Pensiunan</option>
+                                <option value="Tidak Bekerja">Tidak Bekerja</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Nama Ibu <span class="text-red-500">*</span></label>
+                            <input type="text" name="nama_ibu" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Pekerjaan Ibu</label>
+                            <select name="pekerjaan_ibu"
+                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none bg-white">
+                                <option value="">Pilih Pekerjaan</option>
+                                <option value="PNS">PNS/TNI/POLRI</option>
+                                <option value="Swasta">Karyawan Swasta</option>
+                                <option value="Wiraswasta">Wiraswasta</option>
+                                <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
+                                <option value="Petani">Petani/Nelayan</option>
+                                <option value="Buruh">Buruh</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">No. HP Orang Tua <span class="text-red-500">*</span></label>
+                            <input type="tel" name="no_hp_ortu" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none"
+                                placeholder="Nomor yang bisa dihubungi">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-end">
+                    <button type="button" onclick="nextStep(2)" 
+                        class="bg-blue-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-800 transition-all flex items-center gap-2 hover:shadow-lg">
+                        Selanjutnya <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Data Sekolah -->
+            <div id="step-2" class="glass-card rounded-2xl p-6 md:p-8 shadow-lg hidden">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-amber-500">
+                    <div class="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center text-white">
+                        <i class="fas fa-school"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-blue-900">Data Asal Sekolah</h2>
+                        <p class="text-sm text-gray-500">Informasi pendidikan sebelumnya</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Asal Sekolah -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Nama Sekolah <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="asal_sekolah" required
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none"
+                            placeholder="SMA/SMK/MA/Islamic School">
+                    </div>
+
+                    <!-- Jurusan -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Jurusan/Program <span class="text-red-500">*</span>
+                        </label>
+                        <select name="jurusan_sekolah" required
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none bg-white">
+                            <option value="">Pilih Jurusan</option>
+                            <option value="IPA">IPA (Ilmu Pengetahuan Alam)</option>
+                            <option value="IPS">IPS (Ilmu Pengetahuan Sosial)</option>
+                            <option value="Bahasa">Bahasa</option>
+                            <option value="TKJ">TKJ (Teknik Komputer Jaringan)</option>
+                            <option value="RPL">RPL (Rekayasa Perangkat Lunak)</option>
+                            <option value="Akuntansi">Akuntansi</option>
+                            <option value="Perkantoran">Administrasi Perkantoran</option>
+                            <option value="Multimedia">Multimedia</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+
+                    <!-- Tahun Lulus -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Tahun Lulus <span class="text-red-500">*</span>
+                        </label>
+                        <select name="tahun_lulus" required
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none bg-white">
+                            <option value="">Pilih Tahun</option>
+                            <option value="2026" selected>2026</option>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                        </select>
+                    </div>
+
+                    <!-- NPSN -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            NPSN Sekolah
+                        </label>
+                        <input type="text" name="npsn" maxlength="8"
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none"
+                            placeholder="Nomor Pokok Sekolah Nasional">
+                    </div>
+
+                    <!-- Alamat Sekolah -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Alamat Sekolah
+                        </label>
+                        <input type="text" name="alamat_sekolah"
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none"
+                            placeholder="Kota/Kabupaten sekolah">
+                    </div>
+
+                    <!-- Nilai Rata-rata -->
+                    <div class="md:col-span-2 bg-amber-50 p-4 rounded-xl border border-amber-200">
+                        <label class="block text-sm font-bold text-gray-800 mb-3">
+                            <i class="fas fa-star text-amber-500 mr-2"></i>Nilai Rata-rata Raport/SKL
+                        </label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="text-xs text-gray-600 block mb-1">Semester 3</label>
+                                <input type="number" name="nilai_s3" step="0.01" min="0" max="100"
+                                    class="input-field w-full px-3 py-2 rounded-lg border border-gray-300 focus:border-amber-500 outline-none text-center">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-600 block mb-1">Semester 4</label>
+                                <input type="number" name="nilai_s4" step="0.01" min="0" max="100"
+                                    class="input-field w-full px-3 py-2 rounded-lg border border-gray-300 focus:border-amber-500 outline-none text-center">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-600 block mb-1">Semester 5</label>
+                                <input type="number" name="nilai_s5" step="0.01" min="0" max="100"
+                                    class="input-field w-full px-3 py-2 rounded-lg border border-gray-300 focus:border-amber-500 outline-none text-center">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-600 block mb-1">Rata-rata</label>
+                                <input type="number" name="nilai_rata" step="0.01" min="0" max="100" id="nilaiRata"
+                                    class="input-field w-full px-3 py-2 rounded-lg border-2 border-amber-500 outline-none text-center font-bold text-blue-900 bg-white"
+                                    readonly>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">*Diisi jika mendaftar jalur prestasi</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button type="button" onclick="prevStep(1)" 
+                        class="border-2 border-gray-300 text-gray-600 px-6 py-3 rounded-xl font-bold hover:border-blue-900 hover:text-blue-900 transition-all flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i> Sebelumnya
+                    </button>
+                    <button type="button" onclick="nextStep(3)" 
+                        class="bg-blue-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-800 transition-all flex items-center gap-2 hover:shadow-lg">
+                        Selanjutnya <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Pilihan Program Studi -->
+            <div id="step-3" class="glass-card rounded-2xl p-6 md:p-8 shadow-lg hidden">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-amber-500">
+                    <div class="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center text-white">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-blue-900">Pilihan Program Studi</h2>
+                        <p class="text-sm text-gray-500">Pilih maksimal 2 program studi</p>
+                    </div>
+                </div>
+
+                <!-- Jalur Masuk -->
+                <div class="mb-6">
+                    <label class="block text-sm font-bold text-gray-700 mb-3">
+                        Jalur Masuk <span class="text-red-500">*</span>
+                    </label>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="jalur_masuk" value="reguler" class="radio-card hidden" checked onchange="updateBiaya()">
+                            <div class="border-2 border-gray-200 rounded-xl p-4 hover:border-amber-500 transition-all h-full">
+                                <div class="font-bold text-blue-900 mb-1">Reguler</div>
+                                <div class="text-xs text-gray-500">Seleksi nilai raport</div>
+                                <div class="mt-2 text-amber-600 font-bold text-sm">Rp 8.500.000</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="jalur_masuk" value="prestasi" class="radio-card hidden" onchange="updateBiaya()">
+                            <div class="border-2 border-gray-200 rounded-xl p-4 hover:border-amber-500 transition-all h-full">
+                                <div class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">Diskon 50%</div>
+                                <div class="font-bold text-blue-900 mb-1">Prestasi</div>
+                                <div class="text-xs text-gray-500">Nilai raport ≥85</div>
+                                <div class="mt-2 text-green-600 font-bold text-sm">Rp 4.250.000</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="jalur_masuk" value="kip" class="radio-card hidden" onchange="updateBiaya()">
+                            <div class="border-2 border-gray-200 rounded-xl p-4 hover:border-amber-500 transition-all h-full">
+                                <div class="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full">Gratis</div>
+                                <div class="font-bold text-blue-900 mb-1">KIP Kuliah</div>
+                                <div class="text-xs text-gray-500">Bidikmisi/Gratis</div>
+                                <div class="mt-2 text-blue-600 font-bold text-sm">Rp 0 (Dibahas Penuh)</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Pilihan Prodi -->
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Pilihan Program Studi 1 <span class="text-red-500">*</span>
+                        </label>
+                        <select name="pilihan1" required onchange="updatePilihan2()"
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none bg-white">
+                            <option value="">Pilih Program Studi</option>
+                            <optgroup label="Fakultas Teknik">
+                                <option value="TI">Teknik Informatika (A)</option>
+                                <option value="TS">Teknik Sipil (A)</option>
+                                <option value="TE">Teknik Elektro (B)</option>
+                                <option value="TInd">Teknik Industri (B)</option>
+                            </optgroup>
+                            <optgroup label="Fakultas Ekonomi">
+                                <option value="MNJ">Manajemen (A)</option>
+                                <option value="AKT">Akuntansi (A)</option>
+                                <option value="EP">Ekonomi Pembangunan (B)</option>
+                                <option value="BD">Bisnis Digital (B)</option>
+                            </optgroup>
+                            <optgroup label="Fakultas Hukum">
+                                <option value="IH">Ilmu Hukum (A)</option>
+                                <option value="HB">Hukum Bisnis (B)</option>
+                            </optgroup>
+                            <optgroup label="Fakultas Kesehatan">
+                                <option value="KEP">Keperawatan (A)</option>
+                                <option value="FAR">Farmasi (A)</option>
+                                <option value="GZI">Gizi (B)</option>
+                            </optgroup>
+                            <optgroup label="Fakultas Keguruan">
+                                <option value="PBI">Pendidikan Bahasa Inggris (A)</option>
+                                <option value="PMAT">Pendidikan Matematika (B)</option>
+                                <option value="BK">Bimbingan Konseling (B)</option>
+                            </optgroup>
+                            <optgroup label="Fakultas Ilmu Sosial">
+                                <option value="ILKOM">Ilmu Komunikasi (A)</option>
+                                <option value="PSI">Psikologi (A)</option>
+                                <option value="SOS">Sosiologi (B)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Pilihan Program Studi 2 <span class="text-gray-400 text-xs font-normal">(opsional)</span>
+                        </label>
+                        <select name="pilihan2" id="pilihan2"
+                            class="input-field w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none bg-white">
+                            <option value="">Tidak ada pilihan kedua</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Info Biaya -->
+                <div id="infoBiaya" class="bg-blue-50 border-l-4 border-blue-900 p-4 rounded-r-xl mb-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-blue-900">Biaya Pendaftaran</div>
+                            <div class="text-sm text-gray-600">Uang pangkal + Semester 1</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-amber-600" id="totalBiaya">Rp 8.500.000</div>
+                            <div class="text-xs text-gray-500">Belum termasuk biaya operasional</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button type="button" onclick="prevStep(2)" 
+                        class="border-2 border-gray-300 text-gray-600 px-6 py-3 rounded-xl font-bold hover:border-blue-900 hover:text-blue-900 transition-all flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i> Sebelumnya
+                    </button>
+                    <button type="button" onclick="nextStep(4)" 
+                        class="bg-blue-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-800 transition-all flex items-center gap-2 hover:shadow-lg">
+                        Selanjutnya <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 4: Upload Dokumen -->
+            <div id="step-4" class="glass-card rounded-2xl p-6 md:p-8 shadow-lg hidden">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-amber-500">
+                    <div class="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center text-white">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-blue-900">Upload Dokumen</h2>
+                        <p class="text-sm text-gray-500">Lampiran berkas persyaratan</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Upload Foto -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Pas Foto 3x4 <span class="text-red-500">*</span>
+                            <span class="text-xs font-normal text-gray-500 block mt-1">Format JPG/PNG, max 2MB, background merah/biru</span>
+                        </label>
+                        <div class="upload-area rounded-xl p-6 text-center cursor-pointer" onclick="document.getElementById('foto').click()">
+                            <input type="file" id="foto" name="foto" accept="image/*" required class="hidden" onchange="handleFile(this, 'previewFoto')">
+                            <div id="previewFoto" class="hidden mb-3">
+                                <img src="" alt="Preview" class="max-h-32 mx-auto rounded-lg">
+                            </div>
+                            <div class="text-gray-400">
+                                <i class="fas fa-camera text-3xl mb-2"></i>
+                                <p class="text-sm">Klik untuk upload foto</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload Ijazah -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Ijazah/SKL <span class="text-red-500">*</span>
+                            <span class="text-xs font-normal text-gray-500 block mt-1">Format PDF/JPG, max 5MB</span>
+                        </label>
+                        <div class="upload-area rounded-xl p-6 text-center cursor-pointer" onclick="document.getElementById('ijazah').click()">
+                            <input type="file" id="ijazah" name="ijazah" accept=".pdf,image/*" required class="hidden" onchange="handleFile(this, 'previewIjazah')">
+                            <div id="previewIjazah" class="hidden mb-3">
+                                <i class="fas fa-check-circle text-green-500 text-3xl"></i>
+                                <p class="text-sm text-green-600 mt-1 file-name"></p>
+                            </div>
+                            <div class="text-gray-400 upload-placeholder">
+                                <i class="fas fa-file-pdf text-3xl mb-2"></i>
+                                <p class="text-sm">Klik untuk upload ijazah</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload KTP/Kartu Pelajar -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            KTP/Kartu Pelajar <span class="text-red-500">*</span>
+                        </label>
+                        <div class="upload-area rounded-xl p-6 text-center cursor-pointer" onclick="document.getElementById('ktp').click()">
+                            <input type="file" id="ktp" name="ktp" accept="image/*" required class="hidden" onchange="handleFile(this, 'previewKTP')">
+                            <div id="previewKTP" class="hidden mb-3">
+                                <i class="fas fa-check-circle text-green-500 text-3xl"></i>
+                                <p class="text-sm text-green-600 mt-1 file-name"></p>
+                            </div>
+                            <div class="text-gray-400 upload-placeholder">
+                                <i class="fas fa-id-card text-3xl mb-2"></i>
+                                <p class="text-sm">Klik untuk upload KTP</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload KK -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Kartu Keluarga (KK) <span class="text-red-500">*</span>
+                        </label>
+                        <div class="upload-area rounded-xl p-6 text-center cursor-pointer" onclick="document.getElementById('kk').click()">
+                            <input type="file" id="kk" name="kk" accept="image/*" required class="hidden" onchange="handleFile(this, 'previewKK')">
+                            <div id="previewKK" class="hidden mb-3">
+                                <i class="fas fa-check-circle text-green-500 text-3xl"></i>
+                                <p class="text-sm text-green-600 mt-1 file-name"></p>
+                            </div>
+                            <div class="text-gray-400 upload-placeholder">
+                                <i class="fas fa-home text-3xl mb-2"></i>
+                                <p class="text-sm">Klik untuk upload KK</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sertifikat (Opsional) -->
+                <div class="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">
+                        <i class="fas fa-trophy text-amber-500 mr-2"></i>Sertifikat Prestasi (Opsional)
+                        <span class="text-xs font-normal text-gray-500 block mt-1">Untuk jalur prestasi, upload sertifikat juara/penghargaan</span>
+                    </label>
+                    <div class="upload-area rounded-xl p-4 text-center cursor-pointer bg-white" onclick="document.getElementById('sertifikat').click()">
+                        <input type="file" id="sertifikat" name="sertifikat" accept=".pdf,image/*" class="hidden" onchange="handleFile(this, 'previewSertif')">
+                        <div id="previewSertif" class="hidden mb-2">
+                            <i class="fas fa-check-circle text-green-500 text-2xl"></i>
+                            <p class="text-sm text-green-600 mt-1 file-name"></p>
+                        </div>
+                        <div class="text-gray-400 upload-placeholder flex items-center justify-center gap-2">
+                            <i class="fas fa-medal"></i>
+                            <span class="text-sm">Upload sertifikat (jika ada)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Persetujuan -->
+                <div class="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-200">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" name="persetujuan" required class="mt-1 w-5 h-5 text-amber-500 rounded focus:ring-amber-500">
+                        <span class="text-sm text-gray-700">
+                            Saya menyatakan bahwa seluruh data yang saya isi dalam formulir pendaftaran ini adalah <strong>benar dan valid</strong>. 
+                            Apabila di kemudian hari ditemukan data yang tidak sesuai, saya bersedia menerima sanksi pembatalan penerimaan 
+                            sebagai mahasiswa Universitas Parung. <span class="text-red-500">*</span>
+                        </span>
+                    </label>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button type="button" onclick="prevStep(3)" 
+                        class="border-2 border-gray-300 text-gray-600 px-6 py-3 rounded-xl font-bold hover:border-blue-900 hover:text-blue-900 transition-all flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i> Sebelumnya
+                    </button>
+                    <button type="submit" 
+                        class="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2">
+                        <i class="fas fa-paper-plane"></i> Kirim Pendaftaran
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Success Message (Hidden by default) -->
+        <div id="successMessage" class="hidden glass-card rounded-2xl p-8 shadow-lg text-center">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-check-circle text-4xl text-green-500"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-blue-900 mb-2">Pendaftaran Berhasil!</h2>
+            <p class="text-gray-600 mb-6">Terima kasih telah mendaftar di Universitas Parung. Data Anda sedang diproses.</p>
+            
+            <div class="bg-blue-50 p-4 rounded-xl mb-6 text-left">
+                <div class="font-bold text-blue-900 mb-2">Nomor Pendaftaran Anda:</div>
+                <div class="text-3xl font-bold text-amber-600 tracking-wider" id="nomorPendaftaran">PMB20260001</div>
+                <p class="text-sm text-gray-500 mt-2">Simpan nomor ini untuk cek status pendaftaran</p>
+            </div>
+
+            <div class="space-y-3">
+                <button onclick="window.print()" class="w-full bg-blue-900 text-white py-3 rounded-xl font-bold hover:bg-blue-800 transition-all">
+                    <i class="fas fa-print mr-2"></i>Cetak Bukti Pendaftaran
+                </button>
+                <a href="index.html" class="block w-full border-2 border-gray-300 text-gray-600 py-3 rounded-xl font-bold hover:border-blue-900 hover:text-blue-900 transition-all">
+                    Kembali ke Beranda
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        // Navigation functions
+        function nextStep(step) {
+            // Validate current step
+            if (!validateStep(currentStep)) return;
+            
+            document.getElementById(`step-${currentStep}`).classList.add('hidden');
+            document.getElementById(`step-${step}`).classList.remove('hidden');
+            document.getElementById(`step-${step}`).classList.add('animate-slide-in');
+            
+            // Update indicators
+            updateIndicators(step);
+            currentStep = step;
+        }
+
+        function prevStep(step) {
+            document.getElementById(`step-${currentStep}`).classList.add('hidden');
+            document.getElementById(`step-${step}`).classList.remove('hidden');
+            document.getElementById(`step-${step}`).classList.add('animate-slide-in');
+            
+            updateIndicators(step);
+            currentStep = step;
+        }
+
+        function updateIndicators(step) {
+            for (let i = 1; i <= totalSteps; i++) {
+                const indicator = document.getElementById(`step-${i}-indicator`);
+                const progress = document.getElementById(`progress-${i}`);
+                
+                if (i < step) {
+                    indicator.className = 'w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm step-completed transition-all';
+                    indicator.innerHTML = '<i class="fas fa-check"></i>';
+                    if (progress) progress.style.width = '100%';
+                } else if (i === step) {
+                    indicator.className = 'w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm step-active transition-all';
+                    indicator.innerHTML = i;
+                    if (progress) progress.style.width = '50%';
+                } else {
+                    indicator.className = 'w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm step-pending transition-all';
+                    indicator.innerHTML = i;
+                    if (progress) progress.style.width = '0%';
+                }
+            }
+        }
+
+        function validateStep(step) {
+            const currentPanel = document.getElementById(`step-${step}`);
+            const requiredFields = currentPanel.querySelectorAll('[required]');
+            let valid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value || (field.type === 'checkbox' && !field.checked)) {
+                    field.classList.add('border-red-500');
+                    valid = false;
+                } else {
+                    field.classList.remove('border-red-500');
+                }
+            });
+
+            if (!valid) {
+                alert('Mohon lengkapi semua field yang wajib diisi (bertanda *)');
+            }
+
+            return valid;
+        }
+
+        // Calculate average nilai
+        document.querySelectorAll('input[name^="nilai_s"]').forEach(input => {
+            input.addEventListener('input', calculateAverage);
+        });
+
+        function calculateAverage() {
+            const s3 = parseFloat(document.querySelector('input[name="nilai_s3"]').value) || 0;
+            const s4 = parseFloat(document.querySelector('input[name="nilai_s4"]').value) || 0;
+            const s5 = parseFloat(document.querySelector('input[name="nilai_s5"]').value) || 0;
+            
+            if (s3 && s4 && s5) {
+                const avg = ((s3 + s4 + s5) / 3).toFixed(2);
+                document.getElementById('nilaiRata').value = avg;
+            }
+        }
+
+        // Update biaya based on jalur
+        function updateBiaya() {
+            const jalur = document.querySelector('input[name="jalur_masuk"]:checked').value;
+            const biayaElement = document.getElementById('totalBiaya');
+            
+            const biaya = {
+                'reguler': 'Rp 8.500.000',
+                'prestasi': 'Rp 4.250.000',
+                'kip': 'Rp 0 (Gratis)'
+            };
+            
+            biayaElement.textContent = biaya[jalur];
+            
+            if (jalur === 'prestasi') {
+                biayaElement.className = 'text-2xl font-bold text-green-600';
+            } else if (jalur === 'kip') {
+                biayaElement.className = 'text-2xl font-bold text-blue-600';
+            } else {
+                biayaElement.className = 'text-2xl font-bold text-amber-600';
+            }
+        }
+
+        // Update pilihan 2 options
+        function updatePilihan2() {
+            const pilihan1 = document.querySelector('select[name="pilihan1"]').value;
+            const pilihan2 = document.getElementById('pilihan2');
+            
+            // Reset pilihan 2
+            pilihan2.innerHTML = '<option value="">Tidak ada pilihan kedua</option>';
+            
+            // Copy all options from pilihan 1 except selected
+            const options = document.querySelectorAll('select[name="pilihan1"] option');
+            options.forEach(opt => {
+                if (opt.value && opt.value !== pilihan1) {
+                    const newOpt = document.createElement('option');
+                    newOpt.value = opt.value;
+                    newOpt.textContent = opt.textContent;
+                    pilihan2.appendChild(newOpt);
+                }
+            });
+        }
+
+        // Handle file upload preview
+        function handleFile(input, previewId) {
+            const file = input.files[0];
+            if (file) {
+                const preview = document.getElementById(previewId);
+                const placeholder = input.nextElementSibling;
+                
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (preview.querySelector('img')) {
+                            preview.querySelector('img').src = e.target.result;
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+                
+                preview.classList.remove('hidden');
+                if (placeholder) placeholder.classList.add('hidden');
+                
+                // Show filename
+                const filename = preview.querySelector('.file-name');
+                if (filename) filename.textContent = file.name;
+            }
+        }
+
+        // Form submission
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Generate random registration number
+            const randomNum = Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('nomorPendaftaran').textContent = `PMB2026${randomNum}`;
+            
+            // Hide form, show success
+            this.classList.add('hidden');
+            document.getElementById('successMessage').classList.remove('hidden');
+            document.getElementById('successMessage').classList.add('animate-slide-in');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Drag and drop for file uploads
+        document.querySelectorAll('.upload-area').forEach(area => {
+            area.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                area.classList.add('dragover');
+            });
+            
+            area.addEventListener('dragleave', () => {
+                area.classList.remove('dragover');
+            });
+            
+            area.addEventListener('drop', (e) => {
+                e.preventDefault();
+                area.classList.remove('dragover');
+                const input = area.querySelector('input[type="file"]');
+                const files = e.dataTransfer.files;
+                if (files.length) {
+                    input.files = files;
+                    handleFile(input, area.querySelector('div[id^="preview"]').id);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
